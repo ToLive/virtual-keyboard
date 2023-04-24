@@ -1,21 +1,13 @@
 {
-  "name": "webpack-package",
+  "name": "virtual-keyboard",
   "version": "0.1.0",
   "description": "",
   "type": "module",
   "scripts": {
     "test": "jest --colors"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hexlet-boilerplates/webpack-package.git"
-  },
-  "author": "Kirill Mokevnin",
+  "author": "Sergey Grabak",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hexlet-boilerplates/webpack-package/issues"
-  },
-  "homepage": "https://github.com/hexlet-boilerplates/webpack-package#readme",
   "jest": {
     "verbose": true,
     "testEnvironmentOptions": {

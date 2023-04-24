@@ -1,6 +1,6 @@
 // @ts-check
 
 import init from './init.js';
-import './style.css';
+import './sass/main.scss';
 
 init();

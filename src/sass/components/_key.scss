@@ -1,0 +1,53 @@
+.key {
+    white-space: nowrap;
+    text-shadow: 0 0 0.5vh #FFF;
+    border-radius: 0.5vh;
+    width: 100%;
+    text-align: center;
+    line-height: 9vh;
+    color: #FFF;
+    background: radial-gradient(ellipse at center, #333 0%, #222 100%);
+    margin: 0.4vh;
+    padding-left: 1%;
+    padding-right: 1%;
+
+    &.pressed {
+        background: radial-gradient(ellipse at center, #252525 0%, #151515 100%);
+        color: #DDD;
+        text-shadow: 0 0 0.5vh #999;
+    }
+
+    &.single {
+        line-height: 2vh;
+        padding-top: 0.5vh;
+    }
+
+    &.multi {
+        line-height: 4vh;
+        padding-top: 0.5vh;
+    }
+
+    &.shift {
+        width: 300%;
+    }
+
+    &.space {
+        width: 700%;
+    }
+
+    &.backspace {
+        width: 200%;
+    }
+
+    &.enter {
+        width: 200%;
+    }
+
+    &.tab {
+        width: 180%;
+    }
+
+    &.capslock {
+        width: 200%;
+    }
+}
