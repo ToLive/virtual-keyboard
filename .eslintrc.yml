@@ -2,23 +2,23 @@
 root: true
 
 plugins:
-  - jest
-  - babel
-  - prettier
+    - jest
+    - babel
+    - prettier
 
 env:
-  node: true
-  jest: true
-  browser: true
+    node: true
+    jest: true
+    browser: true
 
-parser: "@babel/eslint-parser"
+parser: '@babel/eslint-parser'
 
 extends:
-  - "airbnb-base"
-  - "plugin:jest/recommended"
-  - "prettier"
+    - 'airbnb-base'
+    - 'plugin:jest/recommended'
+    - 'prettier'
 
 rules:
-  prettier/prettier: "error"
-  no-console: 0
-  import/extensions: 0
+    prettier/prettier: 'error'
+    no-console: 0
+    import/extensions: 0
