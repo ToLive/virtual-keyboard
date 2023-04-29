@@ -157,9 +157,13 @@ export default class VirtualKeyboard {
                     this.textbox.focus();
 
                     const { code } = event.target.dataset;
-                    const value = event.target.innerHTML;
 
                     const key = document.querySelector(`[data-code="${code}"]`);
+                    const multiSymbol = this.metaKeyState.shift ? 0 : 1;
+                    const value = key.dataset.multi
+                        ? key.innerHTML.split('<br>')[multiSymbol]
+                        : key.innerHTML;
+
                     key.classList.add('pressed');
 
                     this.keyAction(event, code, value);
