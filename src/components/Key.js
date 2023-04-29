@@ -2,6 +2,10 @@ const Key = (symbols, code, types = null) => {
     const keyContainer = document.createElement('span');
     keyContainer.dataset.code = code;
 
+    if (types && types.includes('multi')) {
+        keyContainer.dataset.multi = true;
+    }
+
     keyContainer.classList.add('key');
 
     if (types) {

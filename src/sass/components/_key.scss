@@ -1,7 +1,7 @@
 .key {
     white-space: nowrap;
     font-family: 'Courier New', Courier, monospace;
-    border-radius: 0.5vh;
+    border-radius: 8px;
     width: 100%;
     text-align: center;
     line-height: 2;
@@ -18,7 +18,7 @@
     &.pressed {
         background: radial-gradient(
             ellipse at center,
-            #252525 0%,
+            #368b44 0%,
             #151515 100%
         );
         color: #ddd;
