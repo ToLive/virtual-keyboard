@@ -10,19 +10,14 @@
 //'vendors/normalize';
 
 // 3. Base stuff
-@import 'base/base',
-'base/fonts',
-'base/typography';
+@import 'base/base', 'base/fonts', 'base/typography';
 //'base/helpers';
 
 // 4. Layout-related sections
-@import 'layout/header',
-'layout/footer';
+@import 'layout/header', 'layout/footer';
 
 // 5. Components
-@import 'components/keyboard',
-'components/key';
-
+@import 'components/keyboard', 'components/textbox', 'components/key';
 
 // 6. Page-specific styles
 @import 'pages/main';

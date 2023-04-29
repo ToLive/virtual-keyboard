@@ -1,0 +1,18 @@
+.textbox__container {
+    display: flex;
+    justify-content: center;
+
+    .textbox__input {
+        width: 970px;
+        height: 250px;
+        background-color: #181818;
+        border: none;
+        resize: none;
+        overflow: auto;
+        outline: none;
+        color: burlywood;
+        font-size: 16px;
+        padding: 10px;
+        font-family: monospace;
+    }
+}

@@ -1,29 +1,37 @@
 .key {
     white-space: nowrap;
-    text-shadow: 0 0 0.5vh #FFF;
+    font-family: 'Courier New', Courier, monospace;
     border-radius: 0.5vh;
     width: 100%;
     text-align: center;
-    line-height: 9vh;
-    color: #FFF;
+    line-height: 2;
+    vertical-align: middle;
+    color: #fff;
     background: radial-gradient(ellipse at center, #333 0%, #222 100%);
     margin: 0.4vh;
     padding-left: 1%;
     padding-right: 1%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     &.pressed {
-        background: radial-gradient(ellipse at center, #252525 0%, #151515 100%);
-        color: #DDD;
+        background: radial-gradient(
+            ellipse at center,
+            #252525 0%,
+            #151515 100%
+        );
+        color: #ddd;
         text-shadow: 0 0 0.5vh #999;
     }
 
     &.single {
-        line-height: 2vh;
+        line-height: 2;
         padding-top: 0.5vh;
     }
 
     &.multi {
-        line-height: 4vh;
+        line-height: 2;
         padding-top: 0.5vh;
     }
 

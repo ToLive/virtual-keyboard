@@ -1,43 +1,147 @@
-import Key from '../components/Key.js';
+import Key from './Key.js';
 import keyboardEn from '../data/keyboardEn.js';
 
 export default class VirtualKeyboard {
-  constructor(element) {
-    this.element = element;
-  }
+    constructor(element) {
+        this.rootContainer = element;
+        this.lineEnd = 0;
+        this.actions = {
+            Insert: 'Insert',
+            Backspace: 'Backspace',
+            Delete: 'Delete',
+            Tab: 'Tab',
+        };
+    }
 
-  init() {
-    keyboardEn.map((row) => {
-      const rowContainer = document.createElement('div');
-      rowContainer.classList.add('row');
-      this.element.appendChild(rowContainer);
+    modifyTextAtCursor(newText, action) {
+        console.log(!this.actions[action]);
+        if (!this.actions[action] || action === this.actions.Insert) {
+            console.log('insert');
+            const [start, end] = [
+                this.textbox.selectionStart,
+                this.textbox.selectionEnd,
+            ];
 
-      row.map((item) => {
-        rowContainer.appendChild(Key(item.type, item.symbols, item.code));
-      })
-    });
+            console.log(start, end);
 
-    let pressedKeys = [];
+            this.textbox.setRangeText(newText, start, end, 'end');
+        }
 
-    addEventListener('keydown', (event) => {
-      event.preventDefault();
+        if (action === this.actions.Backspace) {
+            const [start, end] = [
+                this.textbox.selectionStart,
+                this.textbox.selectionEnd,
+            ];
 
-      const { code } = event;
-      pressedKeys.push(code);
+            this.textbox.setRangeText('', start - 1, end);
+        }
 
-      const key = document.querySelector(`[data-code="${code}"]`);
-      key.classList.add('pressed');
-    });
+        if (action === this.actions.Delete) {
+            const [start, end] = [
+                this.textbox.selectionStart,
+                this.textbox.selectionEnd,
+            ];
 
-    addEventListener('keyup', (event) => {
-      const { code: codeUp } = event;
+            this.textbox.setRangeText('', start, end + 1);
+        }
+    }
 
-      if (pressedKeys.includes(codeUp)) {
-        pressedKeys = pressedKeys.filter((item) => item !== codeUp);
+    keyAction(code, value) {
+        console.log(code, value);
 
-        const key = document.querySelector(`[data-code="${codeUp}"]`);
-        key.classList.remove('pressed');
-      }
-    })
-  }
+        this.modifyTextAtCursor(value, code);
+    }
+
+    buildInputBox() {
+        this.textboxContainer = document.createElement('div');
+        this.textboxContainer.classList.add('textbox__container');
+
+        this.textbox = document.createElement('textarea');
+        this.textbox.classList.add('textbox__input');
+
+        this.textboxContainer.appendChild(this.textbox);
+
+        return this.textboxContainer;
+    }
+
+    buildKeyboard() {
+        const keyboardDiv = document.createElement('div');
+        keyboardDiv.classList.add('keyboard');
+
+        keyboardEn.map((row) => {
+            const rowContainer = document.createElement('div');
+
+            rowContainer.classList.add('row');
+            keyboardDiv.appendChild(rowContainer);
+
+            return row.map((item) => {
+                const mappedKey = Key(item.symbols, item.code, item.type);
+
+                mappedKey.addEventListener('mousedown', (event) => {
+                    console.log(event.target);
+                    this.textbox.focus();
+
+                    const { code } = event.target.dataset;
+                    const value = event.target.innerHTML;
+
+                    const key = document.querySelector(`[data-code="${code}"]`);
+                    key.classList.add('pressed');
+
+                    this.keyAction(code, value);
+                    this.textbox.focus();
+                });
+
+                mappedKey.addEventListener('mouseup', (event) => {
+                    const { code } = event.target.dataset;
+
+                    const key = document.querySelector(`[data-code="${code}"]`);
+                    key.classList.remove('pressed');
+
+                    this.textbox.focus();
+                });
+
+                return rowContainer.appendChild(mappedKey);
+            });
+        });
+
+        let pressedKeys = [];
+
+        window.addEventListener('keydown', (event) => {
+            this.textbox.focus();
+            event.preventDefault();
+
+            const { code } = event;
+            pressedKeys.push(code);
+
+            const key = document.querySelector(`[data-code="${code}"]`);
+            key.classList.add('pressed');
+
+            this.textbox.focus();
+        });
+
+        window.addEventListener('keyup', (event) => {
+            const { code: codeUp } = event;
+
+            if (pressedKeys.includes(codeUp)) {
+                pressedKeys = pressedKeys.filter((item) => item !== codeUp);
+
+                const key = document.querySelector(`[data-code="${codeUp}"]`);
+                key.classList.remove('pressed');
+            }
+
+            this.textbox.focus();
+        });
+
+        return keyboardDiv;
+    }
+
+    init() {
+        this.rootContainer.appendChild(this.buildInputBox());
+        this.rootContainer.appendChild(this.buildKeyboard());
+
+        this.textbox.addEventListener('blur', () => {
+            console.log('focus');
+            this.textbox.focus();
+        });
+    }
 }

@@ -1,4 +1,4 @@
-export default function (types = null, symbols, code) {
+const Key = (symbols, code, types = null) => {
     const keyContainer = document.createElement('span');
     keyContainer.dataset.code = code;
 
@@ -8,7 +8,15 @@ export default function (types = null, symbols, code) {
         keyContainer.classList.add(...types);
     }
 
-    keyContainer.innerHTML = symbols.length > 1 ? `${symbols[0]}<br/>${symbols[1]}` : symbols[0];
+    const mainSymbol = symbols[0].toLowerCase();
+    const secondarySymbol = symbols.length > 1 ? symbols[1] : undefined;
+
+    keyContainer.innerHTML =
+        symbols.length > 1
+            ? `${mainSymbol}<br/>${secondarySymbol}`
+            : mainSymbol;
 
     return keyContainer;
-}
+};
+
+export default Key;
