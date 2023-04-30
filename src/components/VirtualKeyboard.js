@@ -42,7 +42,9 @@ export default class VirtualKeyboard {
         }
 
         if (action === this.actions.Backspace) {
-            this.textbox.setRangeText('', start - 1, end);
+            if (start > 0) {
+                this.textbox.setRangeText('', start - 1, end);
+            }
 
             return;
         }
@@ -207,6 +209,12 @@ export default class VirtualKeyboard {
             pressedKeys.push(code);
 
             const key = document.querySelector(`[data-code="${code}"]`);
+
+            // don't proccess any key that not present on the keyboard
+            if (!key) {
+                return;
+            }
+
             const multiSymbol = this.metaKeyState.shift ? 0 : 1;
             const value = key.dataset.multi
                 ? key.innerHTML.split('<br>')[multiSymbol]
@@ -225,6 +233,12 @@ export default class VirtualKeyboard {
                 pressedKeys = pressedKeys.filter((item) => item !== codeUp);
 
                 const key = document.querySelector(`[data-code="${codeUp}"]`);
+
+                // don't proccess any key that not present on the keyboard
+                if (!key) {
+                    return;
+                }
+
                 key.classList.remove('pressed');
 
                 this.keyAction(event, codeUp, null);
