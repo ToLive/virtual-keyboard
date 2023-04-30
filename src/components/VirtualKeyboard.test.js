@@ -1,5 +1,4 @@
 import VirtualKeyboard from './VirtualKeyboard';
-import Key from './Key';
 
 describe('VirtualKeyboard', () => {
     let element;
