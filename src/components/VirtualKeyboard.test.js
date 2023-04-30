@@ -1,4 +1,5 @@
 import VirtualKeyboard from './VirtualKeyboard';
+import { fireEvent, screen } from '@testing-library/dom';
 
 describe('VirtualKeyboard', () => {
     let element;
@@ -149,4 +150,35 @@ describe('VirtualKeyboard', () => {
             expect(virtualKeyboard.textbox.value).toBe('Hel\t\tlo\nWorld  ');
         });
     });
+
+    /*  describe('Check using DOM events', () => {
+        beforeAll(() => {
+            virtualKeyboard.textbox = document.createElement('textarea');
+
+            virtualKeyboard.textbox.setRangeText('', 0, 0, 'start');
+        });
+
+        it('should delete one character to the left of the current position when pressing backspace', () => {
+            const backspace = 'Backspace';
+
+            const keyH = element.querySelector(`[data-code="KeyH"]`);
+            console.log(keyH);
+
+            fireEvent.keyDown(keyH, {
+                key: 'H',
+                code: 'KeyH',
+            });
+            fireEvent.keyDown(virtualKeyboard.textbox, { code: 'KeyE' });
+            fireEvent.keyDown(virtualKeyboard.textbox, { code: 'KeyL' });
+            fireEvent.keyDown(virtualKeyboard.textbox, { code: 'KeyL' });
+            fireEvent.keyDown(virtualKeyboard.textbox, { code: 'KeyO' });
+
+            expect(virtualKeyboard.textbox.value).toBe('Hello');
+
+            jest.advanceTimersByTime(200);
+
+            fireEvent.keyDown(virtualKeyboard.textbox, { code: backspace });
+            expect(virtualKeyboard.textbox.value).toBe('Hell');
+        });
+    }); */
 });
