@@ -16,6 +16,8 @@ export default class VirtualKeyboard {
             Space: 'Space',
             AltRight: 'AltRight',
             AltLeft: 'AltLeft',
+            MetaLeft: 'MetaLeft',
+            CapsLock: 'CapsLock',
             /* ArrowLeft: 'ArrowLeft',
             ArrowRight: 'ArrowRight',
             ArrowUp: 'ArrowUp',
@@ -90,6 +92,12 @@ export default class VirtualKeyboard {
 
         if (action === this.actions.Space) {
             this.textbox.setRangeText(' ', start, end, 'end');
+
+            return;
+        }
+
+        if (action === this.actions.MetaLeft) {
+            return;
         }
 
         /* if (action === this.actions.ArrowLeft) {
@@ -113,11 +121,17 @@ export default class VirtualKeyboard {
     }
 
     keyAction(event, code, value) {
-        const { AltLeft, AltRight, ShiftLeft, ShiftRight } = this.actions;
-        const { alt: metaAlt, shift: metaShift } = this.metaKeyState;
+        const { AltLeft, AltRight, ShiftLeft, ShiftRight, CapsLock } =
+            this.actions;
+        const {
+            alt: metaAlt,
+            shift: metaShift,
+            capslock: metaCaps,
+        } = this.metaKeyState;
         const downEvents = ['keydown', 'mousedown'];
         const upEvents = ['keyup', 'mouseup', 'mouseleave'];
 
+        // handle language change with alt key
         if (code === AltLeft || code === AltRight) {
             if (!metaAlt && downEvents.includes(event.type)) {
                 this.metaKeyState.alt = true;
@@ -132,6 +146,7 @@ export default class VirtualKeyboard {
             }
         }
 
+        // handle upper case keys with shift and language change
         if (code === ShiftLeft || code === ShiftRight) {
             if (!metaShift && downEvents.includes(event.type)) {
                 this.metaKeyState.shift = true;
@@ -156,6 +171,28 @@ export default class VirtualKeyboard {
             }
 
             return;
+        }
+
+        if (code === CapsLock) {
+            console.log('setCaps ', metaCaps, this.metaKeyState.capslock);
+
+            if (!metaCaps && downEvents.includes(event.type)) {
+                this.metaKeyState.capslock = true;
+
+                this.plainKeys.forEach((key) => {
+                    const keyCopy = key;
+                    keyCopy.innerHTML = key.innerHTML.toUpperCase();
+                });
+            }
+
+            if (metaCaps && downEvents.includes(event.type)) {
+                this.metaKeyState.capslock = false;
+
+                this.plainKeys.forEach((key) => {
+                    const keyCopy = key;
+                    keyCopy.innerHTML = key.innerHTML.toLowerCase();
+                });
+            }
         }
 
         if (['keydown', 'mousedown'].includes(event.type)) {
@@ -211,10 +248,16 @@ export default class VirtualKeyboard {
                     const { code } = event.target.dataset;
 
                     const key = document.querySelector(`[data-code="${code}"]`);
+
+                    if (code === 'CapsLock' && this.metaKeyState.capslock) {
+                        this.keyAction(event, code, null);
+                        this.textbox.focus();
+
+                        return;
+                    }
+
                     key.classList.remove('pressed');
-
                     this.keyAction(event, code, null);
-
                     this.textbox.focus();
                 });
 
@@ -222,10 +265,16 @@ export default class VirtualKeyboard {
                     const { code } = event.target.dataset;
 
                     const key = document.querySelector(`[data-code="${code}"]`);
+
+                    if (code === 'CapsLock' && this.metaKeyState.capslock) {
+                        this.keyAction(event, code, null);
+                        this.textbox.focus();
+
+                        return;
+                    }
+
                     key.classList.remove('pressed');
-
                     this.keyAction(event, code, null);
-
                     this.textbox.focus();
                 });
 
@@ -240,7 +289,6 @@ export default class VirtualKeyboard {
             event.preventDefault();
 
             const { code } = event;
-            console.log(event);
 
             pressedKeys.push(code);
 
@@ -275,8 +323,14 @@ export default class VirtualKeyboard {
                     return;
                 }
 
-                key.classList.remove('pressed');
+                // don't disable pressed state for caps
+                if (codeUp === 'CapsLock' && this.metaKeyState.capslock) {
+                    this.keyAction(event, codeUp, null);
 
+                    return;
+                }
+
+                key.classList.remove('pressed');
                 this.keyAction(event, codeUp, null);
             }
 
