@@ -14,7 +14,8 @@ export default class VirtualKeyboard {
             ShiftRight: 'ShiftRight',
             ShiftLeft: 'ShiftLeft',
             Space: 'Space',
-
+            AltRight: 'AltRight',
+            AltLeft: 'AltLeft',
             /* ArrowLeft: 'ArrowLeft',
             ArrowRight: 'ArrowRight',
             ArrowUp: 'ArrowUp',
@@ -23,7 +24,27 @@ export default class VirtualKeyboard {
 
         this.metaKeyState = {
             shift: false,
+            capslock: false,
+            alt: false,
         };
+    }
+
+    setLang(lang) {
+        console.log(lang);
+
+        const allowedLang = ['ru', 'en'];
+
+        if (!allowedLang.includes(lang)) {
+            throw Error('Wrong language: ', lang);
+        }
+
+        this.lang = lang;
+
+        localStorage.setItem('lang', this.lang);
+    }
+
+    getLang() {
+        return localStorage.getItem('lang', this.lang) || 'en';
     }
 
     modifyTextAtCursor(newText, action) {
@@ -92,15 +113,32 @@ export default class VirtualKeyboard {
     }
 
     keyAction(event, code, value) {
-        if (
-            code === this.actions.ShiftLeft ||
-            code === this.actions.ShiftRight
-        ) {
-            if (
-                !this.metaKeyState.shift &&
-                ['keydown', 'mousedown'].includes(event.type)
-            ) {
+        const { AltLeft, AltRight, ShiftLeft, ShiftRight } = this.actions;
+        const { alt: metaAlt, shift: metaShift } = this.metaKeyState;
+        const downEvents = ['keydown', 'mousedown'];
+        const upEvents = ['keyup', 'mouseup', 'mouseleave'];
+
+        if (code === AltLeft || code === AltRight) {
+            if (!metaAlt && downEvents.includes(event.type)) {
+                this.metaKeyState.alt = true;
+
+                if (metaShift) {
+                    this.setLang(this.getLang() === 'en' ? 'ru' : 'en');
+                }
+            }
+
+            if (metaAlt && upEvents.includes(event.type)) {
+                this.metaKeyState.alt = false;
+            }
+        }
+
+        if (code === ShiftLeft || code === ShiftRight) {
+            if (!metaShift && downEvents.includes(event.type)) {
                 this.metaKeyState.shift = true;
+
+                if (metaAlt) {
+                    this.setLang(this.getLang() === 'en' ? 'ru' : 'en');
+                }
 
                 this.plainKeys.forEach((key) => {
                     const keyCopy = key;
@@ -108,10 +146,7 @@ export default class VirtualKeyboard {
                 });
             }
 
-            if (
-                this.metaKeyState.shift &&
-                ['keyup', 'mouseup', 'mouseleave'].includes(event.type)
-            ) {
+            if (metaShift && upEvents.includes(event.type)) {
                 this.metaKeyState.shift = false;
 
                 this.plainKeys.forEach((key) => {
@@ -205,6 +240,7 @@ export default class VirtualKeyboard {
             event.preventDefault();
 
             const { code } = event;
+            console.log(event);
 
             pressedKeys.push(code);
 
@@ -251,6 +287,7 @@ export default class VirtualKeyboard {
     }
 
     init() {
+        this.setLang(this.getLang());
         this.rootContainer.appendChild(this.buildInputBox());
         this.rootContainer.appendChild(this.buildKeyboard());
 
