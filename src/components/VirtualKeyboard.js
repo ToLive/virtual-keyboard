@@ -1,5 +1,6 @@
 import Key from './Key.js';
 import keyboardEn from '../data/keyboardEn.js';
+import keyboardRu from '../data/keyboardRu.js';
 
 export default class VirtualKeyboard {
     constructor(element) {
@@ -18,10 +19,8 @@ export default class VirtualKeyboard {
             AltLeft: 'AltLeft',
             MetaLeft: 'MetaLeft',
             CapsLock: 'CapsLock',
-            /* ArrowLeft: 'ArrowLeft',
-            ArrowRight: 'ArrowRight',
-            ArrowUp: 'ArrowUp',
-            ArrowDown: 'ArrowDown', */
+            ControlRight: 'ControlRight',
+            ControlLeft: 'ControlLeft',
         };
 
         this.metaKeyState = {
@@ -32,12 +31,16 @@ export default class VirtualKeyboard {
     }
 
     setLang(lang) {
-        console.log(lang);
-
         const allowedLang = ['ru', 'en'];
 
         if (!allowedLang.includes(lang)) {
             throw Error('Wrong language: ', lang);
+        }
+
+        if (this.getLang() && this.getLang() !== lang) {
+            this.destroyKeyboard();
+
+            this.rootContainer.appendChild(this.buildKeyboard(lang));
         }
 
         this.lang = lang;
@@ -97,27 +100,8 @@ export default class VirtualKeyboard {
         }
 
         if (action === this.actions.MetaLeft) {
-            return;
+            // do nothing with WIN key
         }
-
-        /* if (action === this.actions.ArrowLeft) {
-            this.textbox.setRangeText('', start - 1, end - 1, 'start');
-
-            return;
-        }
-
-        if (action === this.actions.ArrowRight) {
-            this.textbox.setRangeText('', start + 1, end + 1, 'start');
-
-            return;
-        }
-
-        if (action === this.actions.ArrowDown) {
-            getLineNumberAndColumnIndex(this.textbox);
-            //this.textbox.setRangeText('', start + 1, end + 1, 'start');
-
-            return;
-        } */
     }
 
     keyAction(event, code, value) {
@@ -157,7 +141,9 @@ export default class VirtualKeyboard {
 
                 this.plainKeys.forEach((key) => {
                     const keyCopy = key;
-                    keyCopy.innerHTML = key.innerHTML.toUpperCase();
+                    keyCopy.innerHTML = metaCaps
+                        ? key.innerHTML.toLowerCase()
+                        : key.innerHTML.toUpperCase();
                 });
             }
 
@@ -166,7 +152,9 @@ export default class VirtualKeyboard {
 
                 this.plainKeys.forEach((key) => {
                     const keyCopy = key;
-                    keyCopy.innerHTML = key.innerHTML.toLowerCase();
+                    keyCopy.innerHTML = metaCaps
+                        ? key.innerHTML.toUpperCase()
+                        : key.innerHTML.toLowerCase();
                 });
             }
 
@@ -174,14 +162,14 @@ export default class VirtualKeyboard {
         }
 
         if (code === CapsLock) {
-            console.log('setCaps ', metaCaps, this.metaKeyState.capslock);
-
             if (!metaCaps && downEvents.includes(event.type)) {
                 this.metaKeyState.capslock = true;
 
                 this.plainKeys.forEach((key) => {
                     const keyCopy = key;
-                    keyCopy.innerHTML = key.innerHTML.toUpperCase();
+                    keyCopy.innerHTML = metaShift
+                        ? key.innerHTML.toLowerCase()
+                        : key.innerHTML.toUpperCase();
                 });
             }
 
@@ -190,7 +178,9 @@ export default class VirtualKeyboard {
 
                 this.plainKeys.forEach((key) => {
                     const keyCopy = key;
-                    keyCopy.innerHTML = key.innerHTML.toLowerCase();
+                    keyCopy.innerHTML = metaShift
+                        ? key.innerHTML.toUpperCase()
+                        : key.innerHTML.toLowerCase();
                 });
             }
         }
@@ -214,11 +204,13 @@ export default class VirtualKeyboard {
         return this.textboxContainer;
     }
 
-    buildKeyboard() {
+    buildKeyboard(lang) {
         const keyboardDiv = document.createElement('div');
         keyboardDiv.classList.add('keyboard');
 
-        keyboardEn.map((row) => {
+        const currentKeyboard = lang === 'en' ? keyboardEn : keyboardRu;
+
+        currentKeyboard.map((row) => {
             const rowContainer = document.createElement('div');
 
             rowContainer.classList.add('row');
@@ -226,6 +218,11 @@ export default class VirtualKeyboard {
 
             return row.map((item) => {
                 const mappedKey = Key(item.symbols, item.code, item.type);
+
+                // preserve caps state on rebuild
+                if (item.code === 'CapsLock' && this.metaKeyState.capslock) {
+                    mappedKey.classList.add('pressed');
+                }
 
                 mappedKey.addEventListener('mousedown', (event) => {
                     this.textbox.focus();
@@ -282,9 +279,21 @@ export default class VirtualKeyboard {
             });
         });
 
+        return keyboardDiv;
+    }
+
+    destroyKeyboard() {
+        this.keyboard = document.querySelector('.keyboard');
+
+        if (this.keyboard) {
+            this.keyboard.remove();
+        }
+    }
+
+    registerWindowListeners() {
         let pressedKeys = [];
 
-        window.addEventListener('keydown', (event) => {
+        const handleKeyDown = (event) => {
             this.textbox.focus();
             event.preventDefault();
 
@@ -308,9 +317,11 @@ export default class VirtualKeyboard {
 
             this.keyAction(event, code, value);
             this.textbox.focus();
-        });
+        };
 
-        window.addEventListener('keyup', (event) => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        const handleKeyUp = (event) => {
             const { code: codeUp } = event;
 
             if (pressedKeys.includes(codeUp)) {
@@ -335,21 +346,26 @@ export default class VirtualKeyboard {
             }
 
             this.textbox.focus();
-        });
+        };
 
-        return keyboardDiv;
+        window.addEventListener('keyup', handleKeyUp);
     }
 
     init() {
-        this.setLang(this.getLang());
+        const currentLang = this.getLang();
+
+        this.setLang(currentLang);
+
         this.rootContainer.appendChild(this.buildInputBox());
-        this.rootContainer.appendChild(this.buildKeyboard());
+        this.rootContainer.appendChild(this.buildKeyboard(currentLang));
+
+        this.registerWindowListeners();
 
         this.textbox.addEventListener('blur', () => {
             this.textbox.focus();
         });
 
-        this.plainKeys = document.querySelectorAll("[data-code^='Key']");
+        this.plainKeys = document.querySelectorAll("[data-single='true']");
         this.multiKeys = document.querySelectorAll("[data-multi='true']");
     }
 }

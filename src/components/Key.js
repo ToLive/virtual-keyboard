@@ -6,6 +6,10 @@ const Key = (symbols, code, types = null) => {
         keyContainer.dataset.multi = true;
     }
 
+    if (code.includes('Key') || (types && types.includes('single'))) {
+        keyContainer.dataset.single = true;
+    }
+
     keyContainer.classList.add('key');
 
     if (types) {
