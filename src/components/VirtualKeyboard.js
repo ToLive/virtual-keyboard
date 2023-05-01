@@ -279,7 +279,27 @@ export default class VirtualKeyboard {
             });
         });
 
+        keyboardDiv.appendChild(this.buildHelp());
+
         return keyboardDiv;
+    }
+
+    buildHelp() {
+        this.helpContainer = document.createElement('div');
+        const aboutKeyboard = document.createElement('p');
+        aboutKeyboard.classList.add('about-keyboard');
+        aboutKeyboard.innerHTML =
+            'Клавиатура написана в операционной системе Windows';
+
+        const langChangeShortcut = document.createElement('p');
+        langChangeShortcut.classList.add('about-lang');
+        langChangeShortcut.innerHTML =
+            'Для переключения раскладки воспользуйтесь Alt + Shift';
+
+        this.helpContainer.appendChild(aboutKeyboard);
+        this.helpContainer.appendChild(langChangeShortcut);
+
+        return this.helpContainer;
     }
 
     destroyKeyboard() {
