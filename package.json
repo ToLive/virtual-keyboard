@@ -4,6 +4,7 @@
     "description": "",
     "type": "module",
     "scripts": {
+        "start": "webpack serve",
         "test": "jest --colors",
         "prepare": "husky install"
     },
