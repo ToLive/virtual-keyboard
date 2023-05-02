@@ -40,6 +40,8 @@ export default class VirtualKeyboard {
         if (this.getLang() && this.getLang() !== lang) {
             this.destroyKeyboard();
 
+            this.metaKeyState.shift = false;
+
             this.rootContainer.appendChild(this.buildKeyboard(lang));
         }
 
@@ -147,7 +149,7 @@ export default class VirtualKeyboard {
                 });
             }
 
-            if (metaShift && upEvents.includes(event.type)) {
+            if (upEvents.includes(event.type)) {
                 this.metaKeyState.shift = false;
 
                 this.plainKeys.forEach((key) => {
@@ -279,6 +281,9 @@ export default class VirtualKeyboard {
             });
         });
 
+        this.plainKeys = keyboardDiv.querySelectorAll("[data-single='true']");
+        this.multiKeys = keyboardDiv.querySelectorAll("[data-multi='true']");
+
         keyboardDiv.appendChild(this.buildHelp());
 
         return keyboardDiv;
@@ -384,8 +389,5 @@ export default class VirtualKeyboard {
         this.textbox.addEventListener('blur', () => {
             this.textbox.focus();
         });
-
-        this.plainKeys = document.querySelectorAll("[data-single='true']");
-        this.multiKeys = document.querySelectorAll("[data-multi='true']");
     }
 }
