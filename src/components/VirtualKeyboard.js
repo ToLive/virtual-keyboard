@@ -21,6 +21,10 @@ export default class VirtualKeyboard {
             CapsLock: 'CapsLock',
             ControlRight: 'ControlRight',
             ControlLeft: 'ControlLeft',
+            ArrowLeft: 'ArrowLeft',
+            ArrowRight: 'ArrowRight',
+            ArrowUp: 'ArrowUp',
+            ArrowDown: 'ArrowDown',
         };
 
         this.metaKeyState = {
@@ -97,6 +101,32 @@ export default class VirtualKeyboard {
 
         if (action === this.actions.Space) {
             this.textbox.setRangeText(' ', start, end, 'end');
+
+            return;
+        }
+
+        if (action === this.actions.ArrowLeft) {
+            if (start > 0) {
+                this.textbox.setRangeText('', start - 1, end - 1, 'start');
+            }
+
+            return;
+        }
+
+        if (action === this.actions.ArrowRight) {
+            this.textbox.setRangeText('', start + 1, end + 1, 'start');
+
+            return;
+        }
+
+        if (action === this.actions.ArrowDown) {
+            window.getSelection().modify('move', 'forward', 'line');
+
+            return;
+        }
+
+        if (action === this.actions.ArrowUp) {
+            window.getSelection().modify('move', 'backward', 'line');
 
             return;
         }
