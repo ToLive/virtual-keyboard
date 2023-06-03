@@ -11,6 +11,7 @@ const Key = (symbols, code, types = null) => {
     }
 
     keyContainer.classList.add('key');
+    keyContainer.classList.add('glassmorphism');
 
     if (types) {
         keyContainer.classList.add(...types);

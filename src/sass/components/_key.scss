@@ -7,7 +7,7 @@
     line-height: 2;
     vertical-align: middle;
     color: #fff;
-    background: radial-gradient(ellipse at center, #333 0%, #222 100%);
+    //background: radial-gradient(ellipse at center, #333 0%, #222 100%);
     margin: 0.4vh;
     padding-left: 1%;
     padding-right: 1%;
@@ -17,11 +17,7 @@
 
     &.pressed {
         transform: scale(1.05);
-        background: radial-gradient(
-            ellipse at center,
-            #368b44 0%,
-            #151515 100%
-        );
+        background: radial-gradient(ellipse at center, #441052 0%, #151515 80%);
         color: #ddd;
         text-shadow: 0 0 0.5vh #999;
     }

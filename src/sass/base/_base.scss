@@ -1,3 +1,12 @@
 html {
     background-color: #101010;
+    background-image: url('/assets/images/background.jpg');
+}
+
+.glassmorphism {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 10px;
+    //border: 1px solid rgba(255, 255, 255, 0.1);
 }

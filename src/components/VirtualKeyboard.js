@@ -230,6 +230,7 @@ export default class VirtualKeyboard {
         this.textbox.cols = 110;
         this.textbox.wrap = 'hard';
         this.textbox.classList.add('textbox__input');
+        this.textbox.classList.add('glassmorphism');
 
         this.textboxContainer.appendChild(this.textbox);
 
