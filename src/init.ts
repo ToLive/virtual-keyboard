@@ -1,6 +1,4 @@
-// @ts-check
-
-import VirtualKeyboard from './components/VirtualKeyboard.js';
+import VirtualKeyboard from '@components/VirtualKeyboard';
 
 export default () => {
     const { body } = document;

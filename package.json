@@ -4,7 +4,9 @@
     "description": "",
     "type": "module",
     "scripts": {
-        "start": "webpack serve",
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
         "test": "jest --colors",
         "prepare": "husky install"
     },
@@ -27,8 +29,6 @@
         "@babel/preset-env": "^7.20.2",
         "@testing-library/dom": "^9.2.0",
         "babel-jest": "^29.3.1",
-        "babel-loader": "^9.1.2",
-        "css-loader": "^6.7.3",
         "debug": "^4.3.4",
         "eslint": "^8.39.0",
         "eslint-config-airbnb": "^19.0.4",
@@ -42,7 +42,6 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-react": "^7.32.2",
         "eslint-plugin-react-hooks": "^4.6.0",
-        "file-loader": "^6.2.0",
         "gh-pages": "^5.0.0",
         "html-webpack-plugin": "^5.5.0",
         "husky": "^8.0.3",
@@ -50,14 +49,9 @@
         "jest-cli": "^29.3.1",
         "jest-environment-jsdom": "^29.3.1",
         "lint-staged": "^13.2.2",
-        "postcss-loader": "^7.0.2",
-        "postcss-preset-env": "^7.8.3",
         "prettier": "^2.8.8",
-        "style-loader": "^3.3.1",
-        "url-loader": "^4.1.1",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.1",
-        "webpack-dev-server": "^4.11.1"
+        "typescript": "^5.0.2",
+        "vite": "^4.3.9"
     },
     "dependencies": {
         "npm-check-updates": "^16.6.2",
