@@ -1,4 +1,10 @@
-export default [
+interface Row {
+    symbols: string[];
+    type?: string[];
+    code: string;
+}
+
+export const KeyboardEn: Row[][] = [
     [
         { symbols: ['~', '`'], type: ['multi'], code: 'Backquote' },
         { symbols: ['!', '1'], type: ['multi'], code: 'Digit1' },

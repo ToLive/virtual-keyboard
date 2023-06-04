@@ -1,8 +1,8 @@
 import VirtualKeyboard from './VirtualKeyboard';
 
 describe('VirtualKeyboard', () => {
-    let element;
-    let virtualKeyboard;
+    let element: HTMLElement;
+    let virtualKeyboard: VirtualKeyboard;
 
     beforeAll(() => {
         element = document.createElement('div');
@@ -36,7 +36,7 @@ describe('VirtualKeyboard', () => {
             virtualKeyboard.textbox.innerHTML = text;
 
             // set carret at the end of the text
-            virtualKeyboard.textbox.setRangeText(
+            virtualKeyboard.textbox?.setRangeText(
                 '',
                 text.length - 1,
                 text.length - 1,
@@ -46,38 +46,38 @@ describe('VirtualKeyboard', () => {
 
         it('should insert text at the current position', () => {
             virtualKeyboard.modifyTextAtCursor('a', 'Insert');
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World!a');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World!a');
         });
 
         it('should delete one character to the left of the current position when pressing backspace', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Backspace');
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World');
         });
 
         it('should delete one character to the right of the current position when pressing delete', () => {
-            virtualKeyboard.textbox.setRangeText(
+            virtualKeyboard.textbox?.setRangeText(
                 '',
-                virtualKeyboard.textbox.value.length - 1,
-                virtualKeyboard.textbox.value.length - 1,
+                virtualKeyboard.textbox?.value.length - 1,
+                virtualKeyboard.textbox?.value.length - 1,
                 'start'
             );
 
             virtualKeyboard.modifyTextAtCursor('', 'Delete');
 
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World');
         });
 
         it('should insert a tab character at the current position when pressing the tab key', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Tab');
             virtualKeyboard.modifyTextAtCursor('', 'Tab');
             virtualKeyboard.modifyTextAtCursor('', 'Tab');
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World!\t\t\t');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World!\t\t\t');
         });
 
         it('should insert a new line character at the current position when pressing the enter key', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Enter');
             virtualKeyboard.modifyTextAtCursor('', 'Enter');
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World!\n\n');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World!\n\n');
         });
 
         it('should insert a space character at the current position when pressing the space key', () => {
@@ -85,7 +85,7 @@ describe('VirtualKeyboard', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Space');
             virtualKeyboard.modifyTextAtCursor('', 'Space');
             virtualKeyboard.modifyTextAtCursor('', 'Space');
-            expect(virtualKeyboard.textbox.value).toBe('Hello, World!    ');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello, World!    ');
         });
     });
 
@@ -93,7 +93,7 @@ describe('VirtualKeyboard', () => {
         beforeAll(() => {
             virtualKeyboard.textbox = document.createElement('textarea');
 
-            virtualKeyboard.textbox.setRangeText('', 0, 0, 'start');
+            virtualKeyboard.textbox?.setRangeText('', 0, 0, 'start');
         });
 
         it('should insert character at the end', () => {
@@ -102,27 +102,27 @@ describe('VirtualKeyboard', () => {
             virtualKeyboard.modifyTextAtCursor('l', 'Insert');
             virtualKeyboard.modifyTextAtCursor('l', 'Insert');
             virtualKeyboard.modifyTextAtCursor('o', 'Insert');
-            expect(virtualKeyboard.textbox.value).toBe('Hello');
+            expect(virtualKeyboard.textbox?.value).toBe('Hello');
         });
 
         it('should delete character at the end', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Backspace');
             virtualKeyboard.modifyTextAtCursor('', 'Backspace');
-            expect(virtualKeyboard.textbox.value).toBe('Hel');
+            expect(virtualKeyboard.textbox?.value).toBe('Hel');
         });
 
         it('should delete one character to the right of the current position when pressing delete', () => {
             virtualKeyboard.modifyTextAtCursor('l', 'Insert');
             virtualKeyboard.modifyTextAtCursor('o', 'Insert');
-            virtualKeyboard.textbox.setRangeText(
+            virtualKeyboard.textbox?.setRangeText(
                 '',
-                virtualKeyboard.textbox.value.length - 2,
-                virtualKeyboard.textbox.value.length - 2,
+                virtualKeyboard.textbox?.value.length - 2,
+                virtualKeyboard.textbox?.value.length - 2,
                 'start'
             );
             virtualKeyboard.modifyTextAtCursor('', 'Delete');
             virtualKeyboard.modifyTextAtCursor('', 'Delete');
-            expect(virtualKeyboard.textbox.value).toBe('Hel');
+            expect(virtualKeyboard.textbox?.value).toBe('Hel');
         });
 
         it('should insert a tab character at the current position when pressing the tab key', () => {
@@ -130,7 +130,7 @@ describe('VirtualKeyboard', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Tab');
             virtualKeyboard.modifyTextAtCursor('l', 'Insert');
             virtualKeyboard.modifyTextAtCursor('o', 'Insert');
-            expect(virtualKeyboard.textbox.value).toBe('Hel\t\tlo');
+            expect(virtualKeyboard.textbox?.value).toBe('Hel\t\tlo');
         });
 
         it('should insert a new line character at the current position when pressing the enter key', () => {
@@ -140,13 +140,13 @@ describe('VirtualKeyboard', () => {
             virtualKeyboard.modifyTextAtCursor('r', 'Insert');
             virtualKeyboard.modifyTextAtCursor('l', 'Insert');
             virtualKeyboard.modifyTextAtCursor('d', 'Insert');
-            expect(virtualKeyboard.textbox.value).toBe('Hel\t\tlo\nWorld');
+            expect(virtualKeyboard.textbox?.value).toBe('Hel\t\tlo\nWorld');
         });
 
         it('should insert a space character at the current position when pressing the space key', () => {
             virtualKeyboard.modifyTextAtCursor('', 'Space');
             virtualKeyboard.modifyTextAtCursor('', 'Space');
-            expect(virtualKeyboard.textbox.value).toBe('Hel\t\tlo\nWorld  ');
+            expect(virtualKeyboard.textbox?.value).toBe('Hel\t\tlo\nWorld  ');
         });
     });
 });
